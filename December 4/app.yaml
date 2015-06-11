@@ -1,0 +1,15 @@
+application: scheduler1520
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: no
+
+handlers:
+- url: /css
+  static_dir: css
+- url: /js
+  static_dir: js
+- url: /Images
+  static_dir: Images
+- url: /.*
+  script: First.app

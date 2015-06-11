@@ -1,0 +1,326 @@
+<html>
+ <head>
+  <link href="/css/newMain.css" rel="stylesheet" type="text/css" />
+  <link href="css/fullcalendar.css" rel="stylesheet" />
+<script src="/js/newFunctions.js"></script>
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/moment.js"></script>
+<script src="js/fullcalendar.js">
+</script><script>
+//var titleString = "Dynamic Variable";
+//var dateString = "2014-12-15";
+//var dynamicEvent = {title:titleString, start: dateString};
+$(document).ready(function() {
+    $("#calendar").fullCalendar({
+    contentHeight:290,
+    aspectRatio:2,
+    eventLimit: true,
+    dayClick: function(date, jsEvent, view) {
+        //alert('Clicked on: ' + date.format());
+        //$(this).css('background-color', 'red');
+        var formattedDate = date.format();
+        var param = "target=" + formattedDate;
+        var xmlHttp = createXmlHttp();
+        xmlHttp.onreadystatechange = function(){
+          if (xmlHttp.readyState == 4){
+            var d = document.getElementById('info');
+            d.innerHTML = xmlHttp.responseText;
+          }
+        }
+        postParameters(xmlHttp, '/ajaxManageEvents', param);
+        //renderEvents();
+    }
+    })
+    renderEvents();  //render the events on start
+    //$("#calendar").fullCalendar('renderEvent', dynamicEvent, true);
+
+});
+
+function renderEvents(){ //ultimately should get and render all of the user's events on the calendar
+  var xmlHttp = createXmlHttp();
+  xmlHttp.onreadystatechange = function(){ 
+    if (xmlHttp.readyState == 4){
+    //alert(xmlHttp.responseText);
+      var events = JSON.parse(xmlHttp.responseText);
+      $("#calendar").fullCalendar('removeEvents');  //clear the calendar first, otherwise we'll be adding duplicate events
+      for (i = 0; i < events.list.length; i++){  //for each event
+        var titleString = events.list[i].title;
+        var dateString = events.list[i].start;
+        var curr = {title: titleString, start: dateString}; //create an event for it
+        $("#calendar").fullCalendar('renderEvent', curr, true);  //add it to the calendar
+      }
+    }
+  
+  }
+  postParameters(xmlHttp, '/getUserEventList', '');
+}
+
+</script>
+<script>
+function createXmlHttp() {
+  var xmlhttp;
+  if (window.XMLHttpRequest) {
+    xmlhttp = new XMLHttpRequest();
+  } else {
+    xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+  }
+  if (!(xmlhttp)) {
+    alert("Your browser does not support AJAX");
+  }
+  return xmlhttp;
+}
+
+// Since we'll be posting parameters to a URL over and over again, we can use this 
+// function to simplify the calls.  Also, since these calls are dependent on the
+// XML HTTP object's methods, it's not a bad idea to abstract this into a separate
+// function so that we can adapt easily if some of the object changes.
+function postParameters(xmlHttp, target, parameters) {
+  if (xmlHttp) {
+    xmlHttp.open("POST", target, true);
+    xmlHttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlHttp.send(parameters);
+  }
+}
+
+function ajaxManageEvents() {
+  var xmlHttp = createXmlHttp();
+  var param = "target=" + "null";
+  // onreadystatechange will be called every time the state of the XML HTTP object changes
+  xmlHttp.onreadystatechange = function() {
+    // we really only care about 4 (response complete) here.
+    if (xmlHttp.readyState == 4) {
+      // we parse the content of the response
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxManageEvents', param);
+}
+function ajaxDeleteEvent(thekey) {
+  var xmlHttp = createXmlHttp();
+  var param = "thekey=" + thekey;
+  xmlHttp.onreadystatechange = function() {
+    if (xmlHttp.readyState == 4) {
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+      renderEvents();  //because now the Event list should be different
+    }
+  }
+;
+  postParameters(xmlHttp, '/ajaxDeleteEvent', param);
+}
+function ajaxFriends() {
+  var xmlHttp = createXmlHttp();
+  //var param = "thekey=" + thekey;
+  xmlHttp.onreadystatechange = function() {
+    if (xmlHttp.readyState == 4) {
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+;
+  postParameters(xmlHttp, '/ajaxFriends', '');
+}
+function ajaxUnfriend(thekey, name2){
+  var xmlHttp = createXmlHttp();
+  var param = "thekey=" + thekey + "&name2=" + name2;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxUnfriend', param);
+}
+function ajaxSendFrinvitation(){
+  var xmlHttp = createXmlHttp();
+  var input = document.getElementById('addfriendname').value;
+  var param = "input=" + input;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxSendFrinvitation', param);
+}
+function ajaxFrinvitations(){
+  var xmlHttp = createXmlHttp();
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxFrinvitations', '');
+}
+function ajaxEnvitations(){
+  var xmlHttp = createXmlHttp();
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxEnvitations', '');
+}
+function ajaxEventWithFriends(){
+  var xmlHttp = createXmlHttp();
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxEventWithFriends', '');
+}
+function ajaxAccept(thekey, sender){
+  var xmlHttp = createXmlHttp();
+  var param = "thekey=" + thekey + "&sender=" + sender;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState==4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxAccept', param);
+}
+function ajaxIgnore(thekey){
+  var xmlHttp = createXmlHttp();
+  var param = "thekey=" + thekey;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState==4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxIgnore', param);
+}
+function ajaxEIgnore(thekey){
+  var xmlHttp = createXmlHttp();
+  var param = "thekey=" + thekey;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState==4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxEIgnore', param);
+}
+function ajaxEAccept(thekey, eName, date, start, end){
+  var xmlHttp = createXmlHttp();
+  var param = "thekey=" + thekey + "&eName=" + eName + "&date=" + date + "&start=" + start + "&end=" + end;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+    }
+  }
+  postParameters(xmlHttp, '/ajaxEAccept', param);
+}
+function ajaxEAccept2(thekey, eName, date, start, probability, end){
+  var xmlHttp = createXmlHttp();
+  var param = "thekey=" + thekey + "&eName=" + eName + "&date=" + date + "&start=" + start + "&probability=" + probability + "&end=" + end;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+      renderEvents();  //because now the Event list should be different
+    }
+  }
+  postParameters(xmlHttp, '/ajaxEAccept2', param);
+}
+function ajaxSendEnvitations(sender, date, time, finished, friendsInvited, eName){
+  var xmlHttp = createXmlHttp();
+  var param = "sender=" + sender + "&date=" + date + "&time=" + time + "&finished=" + finished + "&friendsInvited=" + friendsInvited + "&eName=" + eName;
+  xmlHttp.onreadystatechange = function(){
+    if (xmlHttp.readyState == 4){
+      var d = document.getElementById('info');
+      d.innerHTML = xmlHttp.responseText;
+      renderEvents();  //because now the Event list should be different
+    }
+  }
+  postParameters(xmlHttp, '/ajaxSendEnvitations', param);
+}
+</script> 
+</head>
+ <body>
+  <div id="container">
+  <!--{{message}}-->
+   <div id="wrap">
+    <div id="header">
+     <a href="/"><img src="../Images/logo.png"></a></div>
+    <div id="sidebar">
+     <div id="sp">
+      &nbsp;</div>
+     <button class="btn" id="button2" onclick="buttonParse(1)"><span></span></button>
+     <button class="btn" id='button3' onclick='buttonParse(2)'><span></span></button>
+     <button class="btn" id="button4" onclick="buttonParse(3)"><span></span></button>
+     <button class="btn" id="button5" onclick="buttonParse(4)"><span></span></button>
+     <form action="logout" method="post">
+      <input class="btn" id="button6" type="submit" value="" /></form>
+    </div>
+    <div id="calendar">
+     &nbsp;</div>
+    <div id="edit">
+     <div id="info">
+       {% if indexNumber1 %}
+      <p>
+       {{message}}</p>
+      {% for o in options %}
+      <div>
+      <p>Date: {{ o.date }}</p>
+      <p>Time: {{ o.time }}</p>
+      <p>Score: {{ o.score }}</p>
+      <button onclick="ajaxSendEnvitations('{{sender}}','{{o.date}}','{{o.time}}','{{o.finished}}','{{friendsinvited}}','{{ename}}')">Send</button>
+      <hr>
+      </div>
+      {% endfor %}
+      {% endif %} 
+      {% if indexNumber2 %} 
+      {% for e in events %}
+      <p>
+       Name: {{ e.name }}</p>
+      <p>
+       Date: {{ e.date }}</p>
+      <p>
+       Start time: {{ e.start }}</p>
+      <p>
+       End time: {{ e.end }}</p>
+      <p>
+       Attendance Likelihood: {{ e.attendance }}</p>
+      <p>
+       Repeat: {% if e.sun %} Sun {% endif %} {% if e.mon %} Mon {% endif %} {% if e.tues %} Tues {% endif %} {% if e.wed %} Wed {% endif %} {% if e.thurs %} Thurs {% endif %} {% if e.fri %} Fri {% endif %} {% if e.sat %} Sat {% endif %}</p>
+      <form action="deleteEvent" method="get">
+       <input name="thekey" type="hidden" value="{{e.key}}" /> <input type="submit" value="Delete Event" /></form>
+      <br />
+      <br />
+      {% endfor %} 
+      {% endif %} 
+      {% if indexNumber3 %} 
+      {% for f in friends %}
+      <p>
+       {{ f.name }}</p>
+      <form action="unfriend" method="get">
+       <input name="name2" type="hidden" value="{{f.name}}" /> <input name="thekey" type="hidden" value="{{f.key}}" /> <input type="submit" value="Unfriend" /></form>
+      {% endfor %}<br>
+      <form action="displayFrinvitations" method="get">
+       <input type="submit" value="Friend Invitations" /></form>
+      <button id="addfriendbutton" onclick="AddFriendButtonClick()">Add Friend</button>
+      {% endif %} 
+      {% if indexNumber4 %} 
+      {% for f in frinvitations %}
+      <p>
+       {{ f.sender }}</p>
+      <form action="accept" method="get">
+       <input name="sender" type="hidden" value="{{f.sender}}" /> <input name="thekey" type="hidden" value="{{f.key}}" /> <input type="submit" value="Accept" /></form>
+      <form action="ignore" method="get">
+       <input name="thekey" type="hidden" value="{{f.key}}" /> <input type="submit" value="Ignore" /></form>
+      {% endfor %} 
+      {% endif %}
+      </div>
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

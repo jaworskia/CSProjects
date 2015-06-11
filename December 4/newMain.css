@@ -1,0 +1,195 @@
+body
+{
+font-family: Tahoma, Geneva, sans-serif;
+margin:0 0 0 0;
+background-color: #7575a3;
+}
+
+#header
+{
+  height:50px;
+  width:100%;
+  position:absolute;
+  left:0px;  
+  z-index: -1;
+  background-color: #7575a3;
+  border-bottom: 3px dotted #CCCCFF;
+}
+
+#header img
+{
+  float:left;
+}
+
+#container
+{
+  height:100%;
+  width:100%;
+  margin:0 0 0 0;
+  z-index:1;
+}
+
+#sidebar
+{
+  height:100%;
+  float:left;
+  width:50px;
+  margin: 0 0 0 0;
+  overflow:visible;
+  //background-color: #7575a3;
+  //  border-right: 1px solid white;
+}
+
+#sidebar #sp
+{
+width:50px; 
+height:60px;
+}
+
+#sidebar .btn
+{
+  position:relative;
+  z-index:5;
+  width:50px;
+  height:50px;
+  margin: 0 0 0 0; 
+  transition:width .3s;
+  border-radius:5px;
+  box-shadow: 3px 3px 9px #333;
+  text-align: right;
+}
+
+#sidebar .btn:hover span { /* when the button is hovered over the span no longer displays */
+  display:none
+}
+
+#sidebar .btn:hover{
+  width:150px;
+}
+
+#button2{
+  background: url("../Images/invite.png");
+}
+
+#button3{
+  background: url("../Images/manage.png");
+}
+
+#button4{
+  background: url("../Images/create.png");
+}
+
+#button5{
+  background: url("../Images/friend.png");
+}
+
+#button6{
+  background: url("../Images/logout.png");
+}
+
+
+/*#button2:hover:before {
+  content:"Invites"
+}
+
+#button3:hover:before {
+  content:"Manage"
+}
+
+#button4:hover:before {
+  content:"Create"
+}
+
+#button5:hover:before {
+  content:"Friends"
+}*/
+
+/*#button6:hover:before { <- the log out button
+  value:"Log Out"
+} just kidding, you can't do this with css*/
+
+#sidebar form
+{
+  margin:0 0 0 0;
+}
+
+#calendar
+{
+  min-width: 700px;
+  height:350px;
+  position:absolute;
+  top:50px;
+  left:50px;
+  z-index:3;
+  padding-right:3px;
+  margin-right:25px;
+  margin-left:25px;
+  margin-top:10px;
+  overflow:auto;
+  background-color: #FFFFFF;
+  border-radius:6px;
+  box-shadow: 3px 3px 9px #222222;
+}
+
+#edit
+{
+  /*min-width: 700px;
+   width:calc(100%-50px);
+  min-height:200px;*/
+  win-width:350px;
+  position:absolute;
+  top:400px;
+  left:25%;
+  width:50%;
+  padding-right:3px;
+  margin-right:25px;
+  margin-left:25px;
+  margin-top:10px;
+  z-index:2;
+  border-radius:6px;
+  overflow:auto;
+  transition:top .5s;
+  background-color: #AAAAAA;
+  border-radius:6px;
+  box-shadow: 3px 3px 9px #222222; 
+}
+
+#info
+{
+text-align: center;
+  position:relative;
+  height:200px;
+  /*min-width:700px;*/
+  width:100%;
+  /*min-width: 50%;
+  min-height:50%;
+  top:25%;
+  left:25%;*/
+  padding-top: 10px;
+}
+
+#manageTable td
+{
+padding-right:10px;  
+border-right: 3px solid #cccccc;
+margin:0;
+}
+
+#manageTable .end
+{
+  border-right: none;
+}
+
+#manageTable{
+text-align: center;
+width:100%;
+}
+
+#withFriendsTable{
+  left: 50%;
+  margin:0;
+}
+
+#smallbutton{
+  margin: 0;
+}
